@@ -1,0 +1,45 @@
+# Rebuilds the gem index from the releases in sources.txt and deploys it to GitHub Pages. Run it after publishing a
+# release in one of those repositories (gh workflow run publish.yml --repo DocSpring/gems).
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+      - name: Build the index
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gem install rubygems-generate_index -v 1.2.0 --no-document
+          script/build site
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

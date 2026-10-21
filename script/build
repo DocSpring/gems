@@ -1,0 +1,27 @@
+#!/bin/bash
+# Builds the gem index into a directory: downloads the .gem files attached to the releases listed in sources.txt and
+# runs `gem generate_index`, which writes the compact index Bundler reads (names, versions, info/) and the older
+# Marshal index `gem install` reads.
+#
+#   script/build <site dir>    # needs gh (GH_TOKEN) and the rubygems-generate_index gem
+
+set -euo pipefail
+
+site="${1:?usage: script/build <site dir>}"
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+rm -rf "$site"
+mkdir -p "$site/gems"
+
+grep -v -e '^#' -e '^\s*$' sources.txt | while read -r repo prefix; do
+  tags="$(gh release list --repo "$repo" --limit 1000 --json tagName --jq ".[].tagName | select(startswith(\"$prefix\"))")"
+  [[ -n "$tags" ]] || echo "No releases in $repo with tags starting with $prefix" >&2
+  for tag in $tags; do
+    echo "$repo $tag"
+    gh release download "$tag" --repo "$repo" --pattern '*.gem' --dir "$site/gems"
+  done
+done
+
+ls "$site/gems"/*.gem >/dev/null
+gem generate_index --directory "$site"
+cp index.html "$site/"

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocSpring gems</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 42rem; margin: 3rem auto; padding: 0 1rem; color: #1f2328; background: #fff; }
+    pre { background: #f6f8fa; padding: 1rem; overflow-x: auto; }
+    @media (prefers-color-scheme: dark) { body { color: #e6edf3; background: #0d1117; } pre { background: #161b22; } }
+  </style>
+</head>
+<body>
+  <h1>DocSpring gems</h1>
+  <p>A gem source for DocSpring's builds of open source gems. It serves the gems attached to the releases of
+    <a href="https://github.com/DocSpring/sorbet/releases">DocSpring/sorbet</a>: Sorbet with the rewriter plugins from
+    <a href="https://github.com/DocSpring/sorbet-plugins">DocSpring/sorbet-plugins</a>.</p>
+  <pre>source 'https://docspring.github.io/gems/' do
+  gem 'sorbet'
+  gem 'sorbet-static'
+  gem 'sorbet-static-and-runtime'
+end</pre>
+  <p>Source: <a href="https://github.com/DocSpring/gems">DocSpring/gems</a>.</p>
+</body>
+</html>
