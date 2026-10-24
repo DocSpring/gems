@@ -1,8 +1,12 @@
 # DocSpring gems
 
 A static gem source on GitHub Pages: https://docspring.github.io/gems/. It serves every `.gem` attached to the
-releases listed in `sources.txt`, today DocSpring's Sorbet build (DocSpring/sorbet, tags `docspring-*`), which adds
-the rewriter plugins from [DocSpring/sorbet-plugins](https://github.com/DocSpring/sorbet-plugins).
+releases listed in `sources.txt`:
+
+- DocSpring's Sorbet build (DocSpring/sorbet, tags `docspring-*`), which adds the rewriter plugins from
+  [DocSpring/sorbet-plugins](https://github.com/DocSpring/sorbet-plugins).
+- DocSpring's ironpress build (DocSpring/ironpress, tags `docspring-*`): upstream fixes that aren't released yet.
+  What it changes is in its `docspring/README.md`.
 
 ```ruby
 source 'https://docspring.github.io/gems/' do

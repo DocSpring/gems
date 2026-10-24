@@ -1,3 +1,4 @@
 # Repositories whose GitHub releases this index serves: every .gem attached to a release whose tag starts with the
 # prefix. One per line: <owner/repo> <tag prefix>
 DocSpring/sorbet docspring-
+DocSpring/ironpress docspring-
