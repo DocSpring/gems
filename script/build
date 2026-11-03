@@ -1,7 +1,7 @@
 #!/bin/bash
 # Builds the gem index into a directory: downloads the .gem files attached to the releases listed in sources.txt and
 # runs `gem generate_index`, which writes the compact index Bundler reads (names, versions, info/) and the older
-# Marshal index `gem install` reads.
+# Marshal index `gem install` reads. Releases without a .gem file (DocSpring/ironpress's WASM-only builds) are skipped.
 #
 #   script/build <site dir>    # needs gh (GH_TOKEN) and the rubygems-generate_index gem
 
@@ -17,7 +17,12 @@ grep -v -e '^#' -e '^\s*$' sources.txt | while read -r repo prefix; do
   tags="$(gh release list --repo "$repo" --limit 1000 --json tagName --jq ".[].tagName | select(startswith(\"$prefix\"))")"
   [[ -n "$tags" ]] || echo "No releases in $repo with tags starting with $prefix" >&2
   for tag in $tags; do
-    echo "$repo $tag"
+    gems="$(gh release view "$tag" --repo "$repo" --json assets --jq '[.assets[] | select(.name | endswith(".gem"))] | length')"
+    if [[ "$gems" == 0 ]]; then
+      echo "$repo $tag: no .gem files, skipped"
+      continue
+    fi
+    echo "$repo $tag: $gems .gem files"
     gh release download "$tag" --repo "$repo" --pattern '*.gem' --dir "$site/gems"
   done
 done
